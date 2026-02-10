@@ -45,7 +45,7 @@ h1{margin:10px 0}
   position:absolute;
   width:100%;
   height:100%;
-  background:rgba(30,41,59,0.7);
+  background:rgba(30,41,59,0.75);
   backdrop-filter:blur(16px);
   border-radius:26px;
   padding:24px;
@@ -79,6 +79,40 @@ h1{margin:10px 0}
   color:white;
 }
 
+/* MATCH OVERLAY */
+.match{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,0.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+  opacity:0;
+  pointer-events:none;
+}
+
+.match.active{
+  animation:matchPop 1.5s ease forwards;
+}
+
+.match-box{
+  background:linear-gradient(135deg,#22c55e,#4ade80);
+  color:#022c22;
+  padding:40px 60px;
+  border-radius:30px;
+  font-size:36px;
+  font-weight:900;
+  box-shadow:0 30px 60px rgba(0,0,0,0.5);
+}
+
+@keyframes matchPop{
+  0%{opacity:0;transform:scale(0.6)}
+  20%{opacity:1;transform:scale(1.1)}
+  50%{transform:scale(1)}
+  100%{opacity:0}
+}
+
 .hint{
   margin-top:30px;
   color:#94a3b8;
@@ -98,6 +132,11 @@ h1{margin:10px 0}
 
 <p class="hint">⬅ Swipe left to skip · Swipe right to like ➡</p>
 
+<!-- MATCH OVERLAY -->
+<div class="match" id="match">
+  <div class="match-box">🎉 IT’S A MATCH!</div>
+</div>
+
 <script>
 const books = [
   { title: "The Soul’s Labyrinth", desc: "A philosophical journey into the human mind." },
@@ -107,7 +146,13 @@ const books = [
 ];
 
 const container = document.getElementById("container");
+const match = document.getElementById("match");
 let index = 0;
+
+function showMatch(){
+  match.classList.add("active");
+  setTimeout(()=>match.classList.remove("active"),1500);
+}
 
 function createCard(book){
   const card = document.createElement("div");
@@ -134,50 +179,45 @@ function loadNext(){
 function enableSwipe(card){
   let startX = 0;
   let currentX = 0;
-  let dragging = false;
 
   const like = card.querySelector(".like");
   const nope = card.querySelector(".nope");
 
   card.addEventListener("touchstart", e => {
     startX = e.touches[0].clientX;
-    dragging = true;
   });
 
   card.addEventListener("touchmove", e => {
-    if(!dragging) return;
     currentX = e.touches[0].clientX - startX;
     card.style.transform = `translateX(${currentX}px) rotate(${currentX/10}deg)`;
 
-    if(currentX > 60){
-      like.style.opacity = 1;
-      nope.style.opacity = 0;
-    } else if(currentX < -60){
-      nope.style.opacity = 1;
-      like.style.opacity = 0;
-    } else {
-      like.style.opacity = 0;
-      nope.style.opacity = 0;
-    }
+    like.style.opacity = currentX > 60 ? 1 : 0;
+    nope.style.opacity = currentX < -60 ? 1 : 0;
   });
 
   card.addEventListener("touchend", () => {
-    dragging = false;
-
-    if(Math.abs(currentX) > 120){
-      card.style.transform = `translateX(${currentX > 0 ? 600 : -600}px) rotate(${currentX/8}deg)`;
-      setTimeout(() => card.remove(), 300);
-      loadNext();
-    } else {
-      card.style.transform = "translateX(0)";
-      like.style.opacity = 0;
-      nope.style.opacity = 0;
+    if(currentX > 120){
+      showMatch();
+      swipeAway(card,600);
+    } 
+    else if(currentX < -120){
+      swipeAway(card,-600);
     }
-    currentX = 0;
+    else{
+      card.style.transform="translateX(0)";
+      like.style.opacity=0;
+      nope.style.opacity=0;
+    }
+    currentX=0;
   });
 }
 
-// load first 2 cards
+function swipeAway(card,x){
+  card.style.transform=`translateX(${x}px) rotate(${x/8}deg)`;
+  setTimeout(()=>card.remove(),300);
+  loadNext();
+}
+
 loadNext();
 loadNext();
 </script>
