@@ -6,55 +6,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+*{box-sizing:border-box}
 body{
   margin:0;
   font-family:Arial, sans-serif;
   color:#e5e7eb;
-  background:radial-gradient(circle at top, #1e1b4b, #020617);
+  background:#020617;
   overflow-x:hidden;
 }
 
-/* Animated stars */
-.stars{
+/* CANVAS */
+canvas{
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(2px 2px at 20% 30%, white, transparent),
-    radial-gradient(1px 1px at 80% 60%, white, transparent),
-    radial-gradient(1.5px 1.5px at 50% 80%, white, transparent);
-  opacity:0.2;
-  animation: twinkle 6s infinite alternate;
+  z-index:-3;
+}
+
+/* GRADIENT WAVES */
+.wave{
+  position:fixed;
+  width:200%;
+  height:200px;
+  background:linear-gradient(90deg,#2563eb,#7c3aed,#2563eb);
+  opacity:0.15;
+  filter:blur(80px);
+  animation:waveMove 20s linear infinite;
   z-index:-2;
 }
-@keyframes twinkle{
-  from{opacity:0.15;}
-  to{opacity:0.3;}
+.wave.one{top:10%}
+.wave.two{top:60%;animation-duration:30s;opacity:0.1}
+
+@keyframes waveMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
 }
 
-/* Floating glow blobs */
-.blob{
-  position:fixed;
-  width:360px;
-  height:360px;
-  background:radial-gradient(circle,#7c3aed,transparent 70%);
-  filter:blur(100px);
-  opacity:0.25;
-  animation:float 16s ease-in-out infinite;
-  z-index:-1;
-}
-.blob.one{top:10%;left:-120px;}
-.blob.two{bottom:15%;right:-140px;animation-delay:5s;}
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-60px);}
-}
-
+/* HEADER */
 header{
   padding:20px 40px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:rgba(2,6,23,0.6);
+  background:rgba(2,6,23,0.65);
   backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(255,255,255,0.08);
   position:sticky;
@@ -69,70 +62,78 @@ nav a{
   font-weight:bold;
 }
 
+/* HERO */
 .hero{
-  padding:90px 20px 40px;
+  padding:110px 20px 50px;
   text-align:center;
 }
-
-.hero h2{font-size:42px;}
+.hero h2{font-size:44px}
 .hero p{
-  max-width:700px;
+  max-width:720px;
   margin:auto;
   color:#cbd5f5;
+  font-size:18px;
 }
 
-/* Swipe demo */
+/* BUTTONS */
+.buttons a{
+  display:inline-block;
+  margin:14px;
+  padding:15px 30px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  border-radius:18px;
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 0 30px rgba(124,58,237,0.4);
+  transition:transform 0.3s;
+}
+.buttons a:hover{
+  transform:scale(1.08);
+}
+
+/* SWIPE DEMO */
 .swipe-area{
   margin:60px auto;
   width:320px;
   height:420px;
   position:relative;
 }
-
 .card{
   width:100%;
   height:100%;
   background:rgba(30,41,59,0.7);
-  backdrop-filter:blur(14px);
-  border-radius:24px;
-  padding:20px;
-  position:absolute;
-  touch-action:none;
+  backdrop-filter:blur(16px);
+  border-radius:26px;
+  padding:24px;
   display:flex;
   flex-direction:column;
   justify-content:center;
   text-align:center;
-  transition:transform 0.3s ease;
+  position:absolute;
+  touch-action:none;
+  transition:transform 0.25s;
 }
+.hint{text-align:center;color:#94a3b8}
 
-.card h3{margin-bottom:10px;}
-.card p{color:#cbd5f5;}
-
-.hint{
-  text-align:center;
-  font-size:14px;
-  color:#94a3b8;
-}
-
-section{
-  padding:80px 20px;
-}
-
+/* LEADERBOARDS */
+section{padding:90px 20px}
 .leaderboards{
   max-width:1100px;
   margin:auto;
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:24px;
+  gap:26px;
 }
-
 .board{
   background:rgba(30,41,59,0.6);
-  backdrop-filter:blur(14px);
+  backdrop-filter:blur(16px);
   padding:26px;
   border-radius:22px;
+  box-shadow:0 0 30px rgba(124,58,237,0.2);
 }
 
+/* FOOTER */
 footer{
   text-align:center;
   padding:40px;
@@ -144,9 +145,12 @@ footer{
 
 <body>
 
-<div class="stars"></div>
-<div class="blob one"></div>
-<div class="blob two"></div>
+<!-- PARTICLE CANVAS -->
+<canvas id="bg"></canvas>
+
+<!-- WAVES -->
+<div class="wave one"></div>
+<div class="wave two"></div>
 
 <header>
   <h1>📘 ReadSpark</h1>
@@ -159,45 +163,37 @@ footer{
 
 <section class="hero">
   <h2>Where Reading Becomes a Game 🚀</h2>
-  <p>Swipe books, climb leaderboards, and connect with readers like you.</p>
+  <p>Swipe books, climb leaderboards, and connect with readers who think like you.</p>
+  <div class="buttons">
+    <a href="discover.html">📖 Discover Books</a>
+    <a href="community.html">👥 Join Community</a>
+  </div>
 </section>
 
-<!-- SWIPE DEMO -->
+<!-- SWIPE -->
 <div class="swipe-area">
-  <div class="card" id="swipeCard">
+  <div class="card" id="card">
     <h3>The Soul’s Labyrinth</h3>
     <p>A philosophical journey into the human mind.</p>
   </div>
 </div>
 <p class="hint">⬅ Swipe left to like · Swipe right to skip ➡</p>
 
-<!-- LEADERBOARDS -->
+<!-- LEADERBOARD -->
 <section>
-  <h2 style="text-align:center;">🏆 Leaderboards</h2>
+  <h2 style="text-align:center">🏆 Leaderboards</h2>
   <div class="leaderboards">
     <div class="board">
       <h3>📚 Most Books Read</h3>
-      <ol>
-        <li>Arjun — 18</li>
-        <li>Aanya — 15</li>
-        <li>Rohan — 12</li>
-      </ol>
+      <ol><li>Arjun — 18</li><li>Aanya — 15</li><li>Rohan — 12</li></ol>
     </div>
     <div class="board">
       <h3>💰 Most Donated</h3>
-      <ol>
-        <li>Meera — ₹2,400</li>
-        <li>Kabir — ₹1,950</li>
-        <li>Siya — ₹1,200</li>
-      </ol>
+      <ol><li>Meera — ₹2,400</li><li>Kabir — ₹1,950</li><li>Siya — ₹1,200</li></ol>
     </div>
     <div class="board">
       <h3>🧠 Advanced Readers</h3>
-      <ol>
-        <li>Dev — Level 9</li>
-        <li>Ishita — Level 8</li>
-        <li>Yuvraj — Level 7</li>
-      </ol>
+      <ol><li>Dev — Level 9</li><li>Ishita — Level 8</li><li>Yuvraj — Level 7</li></ol>
     </div>
   </div>
 </section>
@@ -207,33 +203,63 @@ footer{
 </footer>
 
 <script>
-const card = document.getElementById("swipeCard");
-let startX = 0;
-let currentX = 0;
-let dragging = false;
+/* PARTICLES */
+const c = document.getElementById("bg");
+const ctx = c.getContext("2d");
+function resize(){
+  c.width = innerWidth;
+  c.height = innerHeight;
+}
+resize();
+addEventListener("resize", resize);
 
-card.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-  dragging = true;
+const particles=[];
+for(let i=0;i<120;i++){
+  particles.push({
+    x:Math.random()*c.width,
+    y:Math.random()*c.height,
+    r:Math.random()*2+0.5,
+    dx:(Math.random()-0.5)*0.4,
+    dy:(Math.random()-0.5)*0.4
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle="rgba(124,58,237,0.6)";
+  particles.forEach(p=>{
+    p.x+=p.dx;
+    p.y+=p.dy;
+    if(p.x<0||p.x>c.width) p.dx*=-1;
+    if(p.y<0||p.y>c.height) p.dy*=-1;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* SWIPE */
+const card=document.getElementById("card");
+let sx=0,cx=0,drag=false;
+
+card.addEventListener("touchstart",e=>{
+  sx=e.touches[0].clientX;
+  drag=true;
 });
-
-card.addEventListener("touchmove", e => {
-  if(!dragging) return;
-  currentX = e.touches[0].clientX - startX;
-  card.style.transform = `translateX(${currentX}px) rotate(${currentX/12}deg)`;
+card.addEventListener("touchmove",e=>{
+  if(!drag) return;
+  cx=e.touches[0].clientX-sx;
+  card.style.transform=`translateX(${cx}px) rotate(${cx/10}deg)`;
 });
-
-card.addEventListener("touchend", () => {
-  dragging = false;
-  if(Math.abs(currentX) > 120){
-    card.style.transform = `translateX(${currentX > 0 ? 600 : -600}px) rotate(${currentX/10}deg)`;
-    setTimeout(() => {
-      card.style.transform = "translateX(0)";
-    },300);
-  } else {
-    card.style.transform = "translateX(0)";
-  }
-  currentX = 0;
+card.addEventListener("touchend",()=>{
+  drag=false;
+  if(Math.abs(cx)>120){
+    card.style.transform=`translateX(${cx>0?600:-600}px) rotate(${cx/8}deg)`;
+    setTimeout(()=>card.style.transform="translateX(0)",300);
+  }else card.style.transform="translateX(0)";
+  cx=0;
 });
 </script>
 
