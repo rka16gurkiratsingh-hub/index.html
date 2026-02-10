@@ -1,37 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>ReadSpark</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body { font-family: Arial; background:#0f172a; color:#e5e7eb; margin:0; }
-    header { padding:50px; text-align:center; background:#1e40af; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    header {
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #020617;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
     nav a {
-      margin: 0 15px;
+      margin-left: 20px;
+      text-decoration: none;
       color: #93c5fd;
+      font-weight: bold;
+    }
+
+    .hero {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      font-size: 18px;
+      color: #94a3b8;
+    }
+
+    .buttons {
+      margin-top: 30px;
+    }
+
+    .buttons a {
+      display: inline-block;
+      margin: 10px;
+      padding: 14px 22px;
+      background: #2563eb;
+      color: white;
+      border-radius: 10px;
       text-decoration: none;
       font-weight: bold;
     }
-    section { padding:50px; max-width:900px; margin:auto; }
+
+    section {
+      padding: 60px 20px;
+    }
+
+    .leaderboards {
+      max-width: 1000px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .board {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 16px;
+    }
+
+    .board h3 {
+      margin-top: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+      border-top: 1px solid #1e293b;
+    }
   </style>
 </head>
+
 <body>
 
-<header>
-  <h1>ReadSpark</h1>
-  <p>Read. Discover. Connect.</p>
-  <nav>
-    <a href="discover.html">Discover Books</a>
-    <a href="community.html">Community</a>
-  </nav>
-</header>
+  <!-- HEADER -->
+  <header>
+    <h1>📘 ReadSpark</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="discover.html">Discover</a>
+      <a href="community.html">Community</a>
+    </nav>
+  </header>
 
-<section>
-  <h2>What is ReadSpark?</h2>
-  <p>
-    ReadSpark is a personalized reading platform where students discover books,
-    earn rewards, and connect with readers who share similar interests and skills.
-  </p>
-</section>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <h2>Where Reading Becomes a Game 🚀</h2>
+    <p>
+      ReadSpark is a social reading platform that turns reading into a challenge.
+      Discover books with swipe-based matching, track your progress, compete on
+      leaderboards, donate for impact, and connect with readers who share your
+      interests and skill level.
+    </p>
+
+    <div class="buttons">
+      <a href="discover.html">📖 Discover Books</a>
+      <a href="community.html">👥 Join Community</a>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD SECTION -->
+  <section>
+    <h2 style="text-align:center; font-size:32px;">🏆 Leaderboards</h2>
+    <p style="text-align:center; color:#94a3b8;">
+      Weekly rankings based on reading, impact, and skill
+    </p>
+
+    <div class="leaderboards">
+
+      <div class="board">
+        <h3>📚 Most Books Read</h3>
+        <ol>
+          <li>Arjun — 18 books</li>
+          <li>Aanya — 15 books</li>
+          <li>Rohan — 12 books</li>
+        </ol>
+      </div>
+
+      <div class="board">
+        <h3>💰 Most Donated</h3>
+        <ol>
+          <li>Meera — ₹2,400</li>
+          <li>Kabir — ₹1,950</li>
+          <li>Siya — ₹1,200</li>
+        </ol>
+        <p style="font-size:12px; color:#94a3b8;">
+          #1 holds the top spot for a week → earns 0.8% equity
+        </p>
+      </div>
+
+      <div class="board">
+        <h3>🧠 Most Advanced Readers</h3>
+        <ol>
+          <li>Dev — Level 9</li>
+          <li>Ishita — Level 8</li>
+          <li>Yuvraj — Level 7</li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 ReadSpark · Read Smart · Compete · Connect
+  </footer>
 
 </body>
 </html>
