@@ -6,16 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0;}
 body{
-  margin:0;
   font-family:Arial, sans-serif;
-  color:#e5e7eb;
   background:#020617;
+  color:#e5e7eb;
   overflow-x:hidden;
 }
 
-/* CANVAS */
+/* PARTICLE CANVAS */
 canvas{
   position:fixed;
   inset:0;
@@ -54,7 +53,6 @@ header{
   top:0;
   z-index:10;
 }
-
 nav a{
   margin-left:20px;
   color:#93c5fd;
@@ -74,8 +72,6 @@ nav a{
   color:#cbd5f5;
   font-size:18px;
 }
-
-/* BUTTONS */
 .buttons a{
   display:inline-block;
   margin:14px;
@@ -88,9 +84,7 @@ nav a{
   box-shadow:0 0 30px rgba(124,58,237,0.4);
   transition:transform 0.3s;
 }
-.buttons a:hover{
-  transform:scale(1.08);
-}
+.buttons a:hover{transform:scale(1.08);}
 
 /* SWIPE DEMO */
 .swipe-area{
@@ -145,10 +139,7 @@ footer{
 
 <body>
 
-<!-- PARTICLE CANVAS -->
 <canvas id="bg"></canvas>
-
-<!-- WAVES -->
 <div class="wave one"></div>
 <div class="wave two"></div>
 
@@ -157,7 +148,7 @@ footer{
   <nav>
     <a href="index.html">Home</a>
     <a href="discover.html">Discover</a>
-    <a href="community.html">Community</a>
+    <a href="chat.html">AI Assistant</a>
   </nav>
 </header>
 
@@ -166,11 +157,11 @@ footer{
   <p>Swipe books, climb leaderboards, and connect with readers who think like you.</p>
   <div class="buttons">
     <a href="discover.html">📖 Discover Books</a>
-    <a href="community.html">👥 Join Community</a>
+    <a href="chat.html">🤖 AI Book Assistant</a>
   </div>
 </section>
 
-<!-- SWIPE -->
+<!-- SWIPE DEMO -->
 <div class="swipe-area">
   <div class="card" id="card">
     <h3>The Soul’s Labyrinth</h3>
@@ -206,32 +197,22 @@ footer{
 /* PARTICLES */
 const c = document.getElementById("bg");
 const ctx = c.getContext("2d");
-function resize(){
-  c.width = innerWidth;
-  c.height = innerHeight;
-}
+function resize(){c.width=innerWidth;c.height=innerHeight;}
 resize();
-addEventListener("resize", resize);
+addEventListener("resize",resize);
 
 const particles=[];
 for(let i=0;i<120;i++){
-  particles.push({
-    x:Math.random()*c.width,
-    y:Math.random()*c.height,
-    r:Math.random()*2+0.5,
-    dx:(Math.random()-0.5)*0.4,
-    dy:(Math.random()-0.5)*0.4
-  });
+  particles.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+0.5,dx:(Math.random()-0.5)*0.4,dy:(Math.random()-0.5)*0.4});
 }
-
 function animate(){
   ctx.clearRect(0,0,c.width,c.height);
   ctx.fillStyle="rgba(124,58,237,0.6)";
   particles.forEach(p=>{
     p.x+=p.dx;
     p.y+=p.dy;
-    if(p.x<0||p.x>c.width) p.dx*=-1;
-    if(p.y<0||p.y>c.height) p.dy*=-1;
+    if(p.x<0||p.x>c.width)p.dx*=-1;
+    if(p.y<0||p.y>c.height)p.dy*=-1;
     ctx.beginPath();
     ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
     ctx.fill();
@@ -240,16 +221,13 @@ function animate(){
 }
 animate();
 
-/* SWIPE */
+/* SWIPE CARD */
 const card=document.getElementById("card");
 let sx=0,cx=0,drag=false;
 
-card.addEventListener("touchstart",e=>{
-  sx=e.touches[0].clientX;
-  drag=true;
-});
+card.addEventListener("touchstart",e=>{sx=e.touches[0].clientX;drag=true;});
 card.addEventListener("touchmove",e=>{
-  if(!drag) return;
+  if(!drag)return;
   cx=e.touches[0].clientX-sx;
   card.style.transform=`translateX(${cx}px) rotate(${cx/10}deg)`;
 });
@@ -258,7 +236,7 @@ card.addEventListener("touchend",()=>{
   if(Math.abs(cx)>120){
     card.style.transform=`translateX(${cx>0?600:-600}px) rotate(${cx/8}deg)`;
     setTimeout(()=>card.style.transform="translateX(0)",300);
-  }else card.style.transform="translateX(0)";
+  } else card.style.transform="translateX(0)";
   cx=0;
 });
 </script>
