@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ReadSpark AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(120deg,#020617,#0f172a);
+  color:#e5e7eb;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
+
+header{
+  padding:16px;
+  text-align:center;
+  background:rgba(2,6,23,0.7);
+  backdrop-filter:blur(12px);
+}
+
+header a{
+  color:#93c5fd;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.chat{
+  flex:1;
+  padding:20px;
+  overflow-y:auto;
+}
+
+.msg{
+  max-width:75%;
+  padding:14px 18px;
+  border-radius:18px;
+  margin-bottom:14px;
+  line-height:1.4;
+}
+
+.bot{
+  background:#1e293b;
+  align-self:flex-start;
+}
+
+.user{
+  background:#2563eb;
+  align-self:flex-end;
+}
+
+.input{
+  display:flex;
+  padding:14px;
+  gap:10px;
+  background:#020617;
+}
+
+input{
+  flex:1;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  outline:none;
+}
+
+button{
+  padding:14px 20px;
+  border:none;
+  border-radius:14px;
+  background:#22c55e;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">⬅ Home</a>
+  <h2>🤖 ReadSpark AI</h2>
+</header>
+
+<div class="chat" id="chat"></div>
+
+<div class="input">
+  <input id="input" placeholder="Tell me what you like to read..." />
+  <button onclick="send()">Send</button>
+</div>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+
+let preferences = {
+  genre:null,
+  mood:null,
+  level:null
+};
+
+function bot(text){
+  const div=document.createElement("div");
+  div.className="msg bot";
+  div.innerText=text;
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function user(text){
+  const div=document.createElement("div");
+  div.className="msg user";
+  div.innerText=text;
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function send(){
+  const text=input.value.trim();
+  if(!text) return;
+  user(text);
+  input.value="";
+  analyze(text.toLowerCase());
+}
+
+function analyze(text){
+  if(!preferences.genre){
+    preferences.genre=text;
+    bot("Nice choice! What mood do you enjoy? (dark, inspiring, calm, thrilling)");
+  }
+  else if(!preferences.mood){
+    preferences.mood=text;
+    bot("Got it 👍 What’s your reading level? (beginner / intermediate / advanced)");
+  }
+  else if(!preferences.level){
+    preferences.level=text;
+    recommend();
+  }
+  else{
+    recommend();
+  }
+}
+
+function recommend(){
+  bot("Based on your taste, I think you’ll love these:");
+
+  if(preferences.genre.includes("philosophy")){
+    bot("📘 *The Soul’s Labyrinth* – Deep thoughts, self-discovery");
+  }
+  if(preferences.genre.includes("mystery")){
+    bot("🕵️ *Echoes of Time* – Twists that bend reality");
+  }
+  if(preferences.genre.includes("self")){
+    bot("🧠 *Mind Over Matter* – Growth and mental power");
+  }
+
+  bot("Want more recommendations or should I refine it further?");
+}
+
+bot("Hi! 👋 I’m ReadSpark AI. What kind of books do you enjoy?");
+</script>
+
+</body>
+</html>
