@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Discover Books - ReadSpark</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      text-align: center;
+    }
+    .card {
+      background: #1e293b;
+      width: 320px;
+      margin: 100px auto 30px;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    button {
+      padding: 12px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .like { background: #22c55e; color: #022c22; }
+    .skip { background: #ef4444; color: white; }
+    a { color: #93c5fd; display: block; margin-top: 30px; }
+  </style>
+</head>
+
+<body>
+
+  <h1>📖 Discover Books</h1>
+
+  <div class="card">
+    <h2 id="title">The Soul’s Labyrinth</h2>
+    <p id="desc">A dark philosophical journey into the human mind.</p>
+  </div>
+
+  <button class="skip" onclick="nextBook()">Swipe Right ❌</button>
+  <button class="like" onclick="likeBook()">Swipe Left ❤️</button>
+
+  <a href="index.html">⬅ Back to Home</a>
+
+  <script>
+    const books = [
+      { title: "The Soul’s Labyrinth", desc: "A dark philosophical journey into the human mind." },
+      { title: "Echoes of Time", desc: "A mystery that bends time." },
+      { title: "Mind Over Matter", desc: "Where science meets curiosity." }
+    ];
+    let i = 0;
+
+    function showBook() {
+      document.getElementById("title").innerText = books[i].title;
+      document.getElementById("desc").innerText = books[i].desc;
+    }
+
+    function nextBook() {
+      i = (i + 1) % books.length;
+      showBook();
+    }
+
+    function likeBook() {
+      alert("Added to your library 📚");
+      nextBook();
+    }
+  </script>
+
+</body>
+</html>
