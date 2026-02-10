@@ -1,74 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Discover Books - ReadSpark</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #020617;
-      color: #e5e7eb;
-      text-align: center;
-    }
-    .card {
-      background: #1e293b;
-      width: 320px;
-      margin: 100px auto 30px;
-      padding: 20px;
-      border-radius: 16px;
-    }
-    button {
-      padding: 12px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .like { background: #22c55e; color: #022c22; }
-    .skip { background: #ef4444; color: white; }
-    a { color: #93c5fd; display: block; margin-top: 30px; }
-  </style>
+<meta charset="UTF-8">
+<title>Discover Books – ReadSpark</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#020617;
+  color:#e5e7eb;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  overflow:hidden;
+}
+
+header{
+  width:100%;
+  padding:20px;
+  text-align:center;
+  background:rgba(2,6,23,0.7);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+header a{
+  color:#93c5fd;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+h1{margin:10px 0}
+
+.swipe-container{
+  position:relative;
+  width:320px;
+  height:440px;
+  margin-top:40px;
+}
+
+.card{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(30,41,59,0.7);
+  backdrop-filter:blur(16px);
+  border-radius:26px;
+  padding:24px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  touch-action:none;
+}
+
+.card h2{margin-bottom:10px}
+.card p{color:#cbd5f5}
+
+.badge{
+  position:absolute;
+  top:20px;
+  padding:10px 16px;
+  border-radius:12px;
+  font-weight:bold;
+  opacity:0;
+}
+.like{
+  left:20px;
+  background:#22c55e;
+  color:#022c22;
+}
+.nope{
+  right:20px;
+  background:#ef4444;
+  color:white;
+}
+
+.hint{
+  margin-top:30px;
+  color:#94a3b8;
+  font-size:14px;
+}
+</style>
 </head>
 
 <body>
 
-  <h1>📖 Discover Books</h1>
-
-  <div class="card">
-    <h2 id="title">The Soul’s Labyrinth</h2>
-    <p id="desc">A dark philosophical journey into the human mind.</p>
-  </div>
-
-  <button class="skip" onclick="nextBook()">Swipe Right ❌</button>
-  <button class="like" onclick="likeBook()">Swipe Left ❤️</button>
-
+<header>
   <a href="index.html">⬅ Back to Home</a>
+  <h1>📖 Discover Books</h1>
+</header>
 
-  <script>
-    const books = [
-      { title: "The Soul’s Labyrinth", desc: "A dark philosophical journey into the human mind." },
-      { title: "Echoes of Time", desc: "A mystery that bends time." },
-      { title: "Mind Over Matter", desc: "Where science meets curiosity." }
-    ];
-    let i = 0;
+<div class="swipe-container" id="container"></div>
 
-    function showBook() {
-      document.getElementById("title").innerText = books[i].title;
-      document.getElementById("desc").innerText = books[i].desc;
+<p class="hint">⬅ Swipe left to skip · Swipe right to like ➡</p>
+
+<script>
+const books = [
+  { title: "The Soul’s Labyrinth", desc: "A philosophical journey into the human mind." },
+  { title: "Echoes of Time", desc: "A mystery that bends reality and memory." },
+  { title: "Mind Over Matter", desc: "Where science meets human potential." },
+  { title: "The Silent Code", desc: "A thriller hidden in algorithms." }
+];
+
+const container = document.getElementById("container");
+let index = 0;
+
+function createCard(book){
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+    <div class="badge like">LIKE</div>
+    <div class="badge nope">NOPE</div>
+    <h2>${book.title}</h2>
+    <p>${book.desc}</p>
+  `;
+
+  container.appendChild(card);
+  enableSwipe(card);
+}
+
+function loadNext(){
+  if(index < books.length){
+    createCard(books[index]);
+    index++;
+  }
+}
+
+function enableSwipe(card){
+  let startX = 0;
+  let currentX = 0;
+  let dragging = false;
+
+  const like = card.querySelector(".like");
+  const nope = card.querySelector(".nope");
+
+  card.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+    dragging = true;
+  });
+
+  card.addEventListener("touchmove", e => {
+    if(!dragging) return;
+    currentX = e.touches[0].clientX - startX;
+    card.style.transform = `translateX(${currentX}px) rotate(${currentX/10}deg)`;
+
+    if(currentX > 60){
+      like.style.opacity = 1;
+      nope.style.opacity = 0;
+    } else if(currentX < -60){
+      nope.style.opacity = 1;
+      like.style.opacity = 0;
+    } else {
+      like.style.opacity = 0;
+      nope.style.opacity = 0;
     }
+  });
 
-    function nextBook() {
-      i = (i + 1) % books.length;
-      showBook();
-    }
+  card.addEventListener("touchend", () => {
+    dragging = false;
 
-    function likeBook() {
-      alert("Added to your library 📚");
-      nextBook();
+    if(Math.abs(currentX) > 120){
+      card.style.transform = `translateX(${currentX > 0 ? 600 : -600}px) rotate(${currentX/8}deg)`;
+      setTimeout(() => card.remove(), 300);
+      loadNext();
+    } else {
+      card.style.transform = "translateX(0)";
+      like.style.opacity = 0;
+      nope.style.opacity = 0;
     }
-  </script>
+    currentX = 0;
+  });
+}
+
+// load first 2 cards
+loadNext();
+loadNext();
+</script>
 
 </body>
 </html>
